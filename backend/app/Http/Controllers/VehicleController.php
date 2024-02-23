@@ -15,7 +15,6 @@ class VehicleController extends Controller
             'type' => 'required|string',
             'location' => 'required|string',
             'last_service' => 'required|string',
-            'status' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -27,7 +26,6 @@ class VehicleController extends Controller
             'type' => request('type'),
             'location' => request('location'),
             'last_service' => request('last_service'),
-            'status' => request('status'),
         ]);
 
         if ($vehicle) {

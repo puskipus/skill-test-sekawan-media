@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('type');
             $table->string('location');
             $table->dateTime('last_service');
-            $table->enum('status', ['Available', 'In Use']);
+            $table->enum('status', ['Available', 'In Use'])->default('Available');
             $table->timestamps();
         });
 

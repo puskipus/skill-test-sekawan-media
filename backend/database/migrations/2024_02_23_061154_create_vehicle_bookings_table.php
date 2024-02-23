@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('vehicle_id');
             $table->dateTime('pickup_date');
             $table->string('destination');
-            $table->enum('status', ['Pending', 'Approved Supervisor', 'Approved Driver', 'Rejected Supervisor', 'Rejected Driver']);
+            $table->enum('status', ['Pending', 'Approved Supervisor', 'Approved Driver', 'Rejected Supervisor', 'Rejected Driver'])->default('Pending');;
             $table->timestamps();
 
             $table->foreign('admin_id')->references('id')->on('users');
