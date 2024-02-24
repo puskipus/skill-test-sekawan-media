@@ -13,4 +13,11 @@ class UserController extends Controller
 
         return response()->json($drivers);
     }
+
+    public function getSupervisors()
+    {
+        $drivers = User::where('role', 'supervisor')->get();
+
+        return response()->json($drivers);
+    }
 }
