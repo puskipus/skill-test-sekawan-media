@@ -35,6 +35,17 @@ class VehicleController extends Controller
         }
     }
 
+    public function getAll()
+    {
+        $vehicle = Vehicle::get();
+
+        if (!$vehicle) {
+            return response()->json(['error' => 'Vehicle not found'], 404);
+        }
+
+        return response()->json($vehicle);
+    }
+
     public function getByID($id)
     {
         $vehicle = Vehicle::find($id);
