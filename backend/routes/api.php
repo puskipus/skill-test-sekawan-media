@@ -24,7 +24,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
     Route::post('me', [AuthController::class, 'me']);
 });
 
-Route::group(['middleware' => ['auth:api'], 'prefix' => 'vehicle'], function ($router) {
+Route::group(['middleware' => ['auth:api', 'role:Admin'], 'prefix' => 'vehicle'], function ($router) {
     Route::post('/', [VehicleController::class, 'store']);
     Route::get('/', [VehicleController::class, 'getAll']);
     Route::delete('/{id}', [VehicleController::class, 'destroy']);
