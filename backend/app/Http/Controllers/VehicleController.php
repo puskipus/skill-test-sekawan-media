@@ -46,6 +46,33 @@ class VehicleController extends Controller
         return response()->json($vehicle);
     }
 
+    public function update(Request $request, $id)
+    {
+        $vehicle = Vehicle::find($id);
+
+        if (!$vehicle) {
+            return response()->json(['error' => 'Vehicle not found'], 404);
+        }
+
+        $request->validate([
+            'name' => 'required|string|unique:vehicles,name,' . $id,
+            'type' => 'required|string',
+            'location' => 'required|string',
+            'last_service' => 'required|date',
+            'status' => 'required|in:Available,In Use',
+        ]);
+
+        $vehicle->update([
+            'name' => $request->name,
+            'type' => $request->type,
+            'location' => $request->location,
+            'last_service' => $request->last_service,
+            'status' => $request->status,
+        ]);
+
+        return response()->json(['message' => 'Vehicle updated successfully', 'vehicle' => $vehicle]);
+    }
+
     public function destroy($id)
     {
         $vehicle = Vehicle::find($id);
