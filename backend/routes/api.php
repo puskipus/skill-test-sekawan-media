@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VehicleBookingController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,9 +37,8 @@ Route::group(['middleware' => ['auth:api', 'role:Admin'], 'prefix' => 'vehicle']
 Route::group(['middleware' => ['auth:api', 'role:Admin'], 'prefix' => 'users'], function ($router) {
     Route::get('/drivers', [UserController::class, 'getDrivers']);
     Route::get('/supervisors', [UserController::class, 'getSupervisors']);
+});
 
-    Route::post('/', [VehicleController::class, 'store']);
-    Route::delete('/{id}', [VehicleController::class, 'destroy']);
-    Route::get('/{id}', [VehicleController::class, 'getByID']);
-    Route::put('/{id}', [VehicleController::class, 'update']);
+Route::group(['middleware' => ['auth:api', 'role:Admin'], 'prefix' => 'book'], function ($router) {
+    Route::post('/', [VehicleBookingController::class, 'book']);
 });

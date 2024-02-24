@@ -35,15 +35,22 @@ class VehicleController extends Controller
         }
     }
 
-    public function getAll()
+    public function getAll(Request $request)
     {
-        $vehicle = Vehicle::get();
+        $query = Vehicle::query();
 
-        if (!$vehicle) {
-            return response()->json(['error' => 'Vehicle not found'], 404);
+        if ($request->has('status')) {
+            $status = $request->status;
+            $query->where('status', $status);
         }
 
-        return response()->json($vehicle);
+        $vehicles = $query->get();
+
+        if ($vehicles->isEmpty()) {
+            return response()->json(['error' => 'Vehicles not found'], 404);
+        }
+
+        return response()->json($vehicles);
     }
 
     public function getByID($id)
