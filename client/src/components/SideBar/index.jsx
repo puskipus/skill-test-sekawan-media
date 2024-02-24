@@ -30,6 +30,11 @@ export default function Sidebar() {
               <NavlinkSidebar to="/vehicles" text="Vehicles" />
             </li>
 
+            {/* booking */}
+            <li>
+              <NavlinkSidebar to="/booking" text="Booking" />
+            </li>
+
             {role === "admin" ? <SideBarAdmin /> : <SideBarStaff />}
           </ul>
         </div>

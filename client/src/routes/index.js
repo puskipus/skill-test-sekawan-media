@@ -7,6 +7,7 @@ import Dashboard from "../pages/Dashboard";
 import Vehicles from "../pages/Vehicles/Vehicles";
 import GuardRoleRoute from "../components/GuardRoleRoute";
 import VehiclesAdd from "../pages/Vehicles/VehiclesAdd";
+import Booking from "../pages/Booking/Booking";
 
 export function AppRoutes() {
   return (
@@ -44,6 +45,17 @@ export function AppRoutes() {
           <GuardRoute>
             <GuardRoleRoute role={"Admin"}>
               <VehiclesAdd />
+            </GuardRoleRoute>
+          </GuardRoute>
+        }
+      />
+
+      <Route
+        path="/booking"
+        element={
+          <GuardRoute>
+            <GuardRoleRoute role={"Admin"}>
+              <Booking />
             </GuardRoleRoute>
           </GuardRoute>
         }

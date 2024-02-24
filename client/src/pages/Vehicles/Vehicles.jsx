@@ -14,50 +14,48 @@ export default function Vehicles() {
   const fetchvehicles = async () => {
     try {
       const res = await getData(`/vehicle`);
-      console.log(res);
-
       setvehicles(res.data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleDelete = async (id) => {
-    const result = await Swal.fire({
-      title: "Anda yakin menghapus barang ini?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-    });
-    if (result.isConfirmed) {
-      const res = await deleteData(`/vehicles/${id}`);
+  // const handleDelete = async (id) => {
+  //   const result = await Swal.fire({
+  //     title: "Anda yakin menghapus vehicle ini?",
+  //     icon: "question",
+  //     showCancelButton: true,
+  //     confirmButtonText: "Yes",
+  //     cancelButtonText: "No",
+  //   });
+  //   if (result.isConfirmed) {
+  //     const res = await deleteData(`/vehicle/${id}`);
 
-      if (res?.data?.message) {
-        toast.success(res?.data?.message, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+  //     if (res?.data?.message) {
+  //       toast.success(res?.data?.message, {
+  //         position: "top-right",
+  //         autoClose: 5000,
+  //         hideProgressBar: false,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         progress: undefined,
+  //       });
 
-        fetchvehicles();
-      } else {
-        toast.error(res?.response?.data?.error, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-    }
-  };
+  //       fetchvehicles();
+  //     } else {
+  //       toast.error(res?.response?.data?.error, {
+  //         position: "top-right",
+  //         autoClose: 5000,
+  //         hideProgressBar: false,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         progress: undefined,
+  //       });
+  //     }
+  //   }
+  // };
 
   useEffect(() => {
     setRole(JSON.parse(localStorage.getItem("role")));
@@ -100,11 +98,11 @@ export default function Vehicles() {
                       <th scope="col" class="px-6 py-3">
                         status
                       </th>
-                      {role === "Admin" ? (
+                      {/* {role === "Admin" ? (
                         <th scope="col" class="px-6 py-3">
                           Action
                         </th>
-                      ) : null}
+                      ) : null} */}
                     </tr>
                   </thead>
                   <tbody>
@@ -123,8 +121,8 @@ export default function Vehicles() {
                         <td className="px-6 py-4">{data.location}</td>
                         <td className="px-6 py-4">{data.last_service}</td>
                         <td className="px-6 py-4">{data.status}</td>
-                        {role === "Admin" ? (
-                          <td className="px-6 py-4 text-left">
+                        {/* {role === "Admin" ? (
+                          <td className="px-6 py-4 text-left flex gap-5">
                             <Link
                               to={`/vehicles/edit/${data.id}`}
                               href="#"
@@ -132,15 +130,14 @@ export default function Vehicles() {
                             >
                               Edit
                             </Link>
-                            <a
-                              href="#"
-                              className="ml-5 font-medium text-red-600 dark:text-red-500 hover:underline"
+                            <div
+                              className="cursor-pointer font-medium text-red-600 dark:text-red-500 hover:underline"
                               onClick={() => handleDelete(data.id)}
                             >
                               Delete
-                            </a>
+                            </div>
                           </td>
-                        ) : null}
+                        ) : null} */}
                       </tr>
                     ))}
                   </tbody>

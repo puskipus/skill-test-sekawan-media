@@ -38,13 +38,13 @@ class VehicleBookingController extends Controller
 
         switch ($role) {
             case 'Admin':
-                $bookings = VehicleBooking::where('admin_id', $userId)->get();
+                $bookings = VehicleBooking::with('admin')->with('supervisor')->with('driver')->with('vehicle')->where('admin_id', $userId)->get();
                 break;
             case 'Supervisor':
-                $bookings = VehicleBooking::where('supervisor_id', $userId)->get();
+                $bookings = VehicleBooking::with('admin')->with('supervisor')->with('driver')->with('vehicle')->where('supervisor_id', $userId)->get();
                 break;
             case 'Driver':
-                $bookings = VehicleBooking::where('driver_id', $userId)->get();
+                $bookings = VehicleBooking::with('admin')->with('supervisor')->with('driver')->with('vehicle')->where('driver_id', $userId)->get();
                 break;
             default:
                 return response()->json(['error' => 'Invalid role'], 400);
