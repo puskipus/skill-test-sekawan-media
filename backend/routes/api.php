@@ -26,4 +26,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'vehicle'], function ($router) {
     Route::post('/', [VehicleController::class, 'store']);
+    Route::delete('/{id}', [VehicleController::class, 'destroy']);
+    Route::get('/{id}', [VehicleController::class, 'getByID']);
 });

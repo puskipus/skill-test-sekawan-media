@@ -33,7 +33,29 @@ class VehicleController extends Controller
         } else {
             return response()->json(['message' => 'Create Vehicle Failed'], 404);
         }
+    }
 
+    public function getByID($id)
+    {
+        $vehicle = Vehicle::find($id);
 
+        if (!$vehicle) {
+            return response()->json(['error' => 'Vehicle not found'], 404);
+        }
+
+        return response()->json($vehicle);
+    }
+
+    public function destroy($id)
+    {
+        $vehicle = Vehicle::find($id);
+
+        if (!$vehicle) {
+            return response()->json(['error' => 'Vehicle not found'], 404);
+        }
+
+        $vehicle->delete();
+
+        return response()->json(['message' => 'Vehicle deleted successfully']);
     }
 }
