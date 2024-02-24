@@ -30,4 +30,26 @@ class VehicleBookingController extends Controller
 
         return response()->json(['message' => 'Vehicle booked successfully', 'booking' => $booking], 201);
     }
+
+    public function get()
+    {
+        $role = Auth::user()->role;
+        $userId = Auth::id();
+
+        switch ($role) {
+            case 'Admin':
+                $bookings = VehicleBooking::where('admin_id', $userId)->get();
+                break;
+            case 'Supervisor':
+                $bookings = VehicleBooking::where('supervisor_id', $userId)->get();
+                break;
+            case 'Driver':
+                $bookings = VehicleBooking::where('driver_id', $userId)->get();
+                break;
+            default:
+                return response()->json(['error' => 'Invalid role'], 400);
+        }
+
+        return response()->json(['bookings' => $bookings]);
+    }
 }
