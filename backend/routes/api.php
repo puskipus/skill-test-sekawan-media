@@ -41,6 +41,6 @@ Route::group(['middleware' => ['auth:api', 'role:Admin'], 'prefix' => 'users'], 
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'book'], function ($router) {
     Route::post('/', [VehicleBookingController::class, 'book'])->middleware('role:Admin');
-
     Route::get('/', [VehicleBookingController::class, 'get']);
+    Route::put('/{id}/approve', [VehicleBookingController::class, 'approve'])->middleware('role:Supervisor,Driver');
 });

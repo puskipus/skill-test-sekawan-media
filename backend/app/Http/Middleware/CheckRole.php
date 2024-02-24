@@ -29,5 +29,6 @@ class CheckRole
         }
 
         return response()->json(['error' => 'Forbidden'], 403);
+        // return response()->json(['error' => $user->role], 403);
     }
 }

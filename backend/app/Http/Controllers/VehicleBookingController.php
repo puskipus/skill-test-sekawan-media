@@ -52,4 +52,29 @@ class VehicleBookingController extends Controller
 
         return response()->json(['bookings' => $bookings]);
     }
+
+    public function approve($id)
+    {
+        $booking = VehicleBooking::find($id);
+
+        if (!$booking) {
+            return response()->json(['error' => 'Booking not found'], 404);
+        }
+
+        $role = Auth::user()->role;
+        switch ($role) {
+            case 'Supervisor':
+                $booking->status = 'Approved Supervisor';
+                break;
+            case 'Driver':
+                $booking->status = 'Approved Driver';
+                break;
+            default:
+                return response()->json(['error' => 'Invalid role'], 400);
+        }
+
+        $booking->save();
+
+        return response()->json(['message' => 'Booking approved successfully', 'booking' => $booking]);
+    }
 }
