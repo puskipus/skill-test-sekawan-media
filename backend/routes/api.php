@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleBookingController;
 use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\VehicleUsageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,4 +44,8 @@ Route::group(['middleware' => ['auth:api'], 'prefix' => 'book'], function ($rout
     Route::post('/', [VehicleBookingController::class, 'book'])->middleware('role:Admin');
     Route::get('/', [VehicleBookingController::class, 'get']);
     Route::put('/{id}/approve', [VehicleBookingController::class, 'approve'])->middleware('role:Supervisor,Driver');
+});
+
+Route::group(['middleware' => ['auth:api'], 'prefix' => 'usage'], function ($router) {
+    Route::post('/', [VehicleUsageController::class, 'store'])->middleware('role:Driver');
 });
