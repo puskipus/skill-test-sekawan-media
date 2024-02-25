@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\VehicleBookingsExport;
 use App\Models\VehicleBooking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class VehicleBookingController extends Controller
 {
@@ -86,5 +88,13 @@ class VehicleBookingController extends Controller
             ->get();
 
         return response()->json(['usage_counts' => $usageCounts]);
+    }
+
+    public function export()
+    {
+        $bookings = VehicleBooking::with('admin')->with('supervisor')->with('driver')->with('vehicle')->get();
+
+
+        return Excel::download(new VehicleBookingsExport($bookings), 'vehicle_bookings.xlsx');
     }
 }

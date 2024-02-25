@@ -46,6 +46,7 @@ Route::group(['middleware' => ['auth:api'], 'prefix' => 'book'], function ($rout
     Route::put('/{id}/approve', [VehicleBookingController::class, 'approve'])->middleware('role:Supervisor,Driver');
 
     Route::get('/vehicle-usage', [VehicleBookingController::class, 'getUsageCounts']);
+    Route::get('/export', [VehicleBookingController::class, 'export']);
 });
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'usage'], function ($router) {
