@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/SideBar";
 import AddButton from "../../components/Button/AddButton";
-import { deleteData, getData } from "../../utils/fetch";
+import { getData } from "../../utils/fetch";
 
 export default function Vehicles() {
   const [vehicles, setvehicles] = useState([]);
@@ -58,8 +58,6 @@ export default function Vehicles() {
     setRole(JSON.parse(localStorage.getItem("role")));
     fetchvehicles();
   }, []);
-
-  console.log(vehicles);
 
   return (
     <>
