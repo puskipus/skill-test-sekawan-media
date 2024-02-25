@@ -3,6 +3,8 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/SideBar";
 import VehicleUsageChart from "../components/Chart/VehicleUsageChart ";
 import { getData } from "../utils/fetch";
+import { saveAs } from "file-saver";
+import DownloadButton from "../components/Button/DownloadButton";
 
 export default function Dashboard() {
   const [label, setLabel] = useState([]);
@@ -24,12 +26,22 @@ export default function Dashboard() {
     }
   };
 
+  const downloadExcel = async () => {
+    try {
+      const res = await getData("/book/export", null, "blob");
+
+      const blobData = new Blob([res.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      saveAs(blobData, "vehicle_bookings.xlsx");
+    } catch (error) {
+      console.error("Error fetching Excel file:", error);
+    }
+  };
+
   useEffect(() => {
     fetchvehicles();
   }, []);
-
-  console.log(label);
-  console.log(data);
 
   return (
     <div>
@@ -40,7 +52,13 @@ export default function Dashboard() {
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
           <div>
             <h1 className="text-5xl text-center">Selamat Datang</h1>
-            <VehicleUsageChart data={data} labels={label} />
+            <div className="mt-20">
+              <div className="flex items-center gap-10">
+                <h2 className="text-lg">Download laporan booking vehicle</h2>
+                <DownloadButton onCLick={() => downloadExcel()} />
+              </div>
+              <VehicleUsageChart data={data} labels={label} />
+            </div>
           </div>
         </div>
       </div>
