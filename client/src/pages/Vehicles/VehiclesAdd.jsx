@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import SubmitButton from "../../components/Button/SubmitButton";
 import Input from "../../components/Input/Input";
-import TextArea from "../../components/Input/TextArea";
 
 export default function VehiclesAdd() {
   const navigate = useNavigate();

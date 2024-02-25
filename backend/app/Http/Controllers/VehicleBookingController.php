@@ -77,4 +77,14 @@ class VehicleBookingController extends Controller
 
         return response()->json(['message' => 'Booking approved successfully', 'booking' => $booking]);
     }
+
+    public function getUsageCounts()
+    {
+        $usageCounts = VehicleBooking::with('vehicle')->select('vehicle_id')
+            ->selectRaw('COUNT(*) as usage_count')
+            ->groupBy('vehicle_id')
+            ->get();
+
+        return response()->json(['usage_counts' => $usageCounts]);
+    }
 }

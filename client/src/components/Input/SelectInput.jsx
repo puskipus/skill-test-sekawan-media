@@ -30,9 +30,9 @@ export default function SelectInput({
           </option>
         )}
 
-        {options.map((option, index) => (
-          <option key={index} value={option}>
-            {option}
+        {options.map((data, index) => (
+          <option key={index} value={data.id}>
+            {data.name}
           </option>
         ))}
       </select>

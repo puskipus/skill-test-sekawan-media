@@ -1,22 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/SideBar";
-import { postData } from "../../utils/fetch";
+import { getData, postData } from "../../utils/fetch";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import SubmitButton from "../../components/Button/SubmitButton";
 import Input from "../../components/Input/Input";
 import TextArea from "../../components/Input/TextArea";
+import { useParams } from "react-router-dom";
 
-export default function VehiclesAdd() {
+export default function VehiclesUpdate() {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const [form, setForm] = useState({
-    name: "",
-    type: "",
-    last_service: "",
-    location: "",
+    namaBarang: "",
+    deskripsi: "",
+    harga: "",
+    stock: "",
   });
 
   const handleChange = (e) => {
@@ -27,14 +29,14 @@ export default function VehiclesAdd() {
     e.preventDefault();
 
     const result = await Swal.fire({
-      title: "Anda yakin menambahkan vehicle ini?",
+      title: "Anda yakin mengupdate barang ini?",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Yes",
       cancelButtonText: "No",
     });
     if (result.isConfirmed) {
-      const res = await postData(`/vehicle`, form);
+      const res = await postData(`/inventaris/update/${id}`, form);
 
       if (res?.data?.message) {
         toast.success(res?.data?.message, {
@@ -47,7 +49,7 @@ export default function VehiclesAdd() {
           progress: undefined,
         });
 
-        navigate("/vehicles");
+        navigate("/inventaris");
       } else {
         toast.error(res?.response?.data?.error, {
           position: "top-right",
@@ -62,6 +64,26 @@ export default function VehiclesAdd() {
     }
   };
 
+  const fetchInventaris = async () => {
+    try {
+      const res = await getData(`/inventaris/${id}`);
+      const {
+        namaBarang = "",
+        deskripsi = "",
+        harga = "",
+        stock = "",
+      } = res.data[0];
+
+      setForm({ namaBarang, deskripsi, harga, stock });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchInventaris();
+  }, []);
+
   console.log(form);
 
   return (
@@ -71,43 +93,47 @@ export default function VehiclesAdd() {
 
       <div className="p-4 sm:ml-64">
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
-          <h1 className="text-3xl">Add Vehicles</h1>
+          <h1 className="text-3xl">Update Barang</h1>
 
           <form className="max-w-sm mt-16" onSubmit={handleSubmit}>
             <Input
               type={"text"}
-              label="Nama Vehicle"
-              id="name"
-              name="name"
-              placeholder="Mobil xx"
+              label="Nama Barang"
+              id="namaBarang"
+              name="namaBarang"
+              placeholder="Drone XX"
               onChange={handleChange}
               required
+              value={form.namaBarang}
+            />
+            <TextArea
+              type={"text"}
+              label="Deskripsi"
+              id="deskripsi"
+              name="deskripsi"
+              onChange={handleChange}
+              required
+              value={form.deskripsi}
+            />
+            <Input
+              type={"number"}
+              label="Harga"
+              id="harga"
+              name="harga"
+              placeholder="50000"
+              onChange={handleChange}
+              required
+              value={form.harga}
             />
             <Input
               type={"text"}
-              label="Tipe"
-              id="type"
-              name="type"
-              placeholder="Alat Berat"
+              label="Stock Awal"
+              id="stock"
+              name="stock"
+              placeholder="10"
               onChange={handleChange}
               required
-            />
-            <Input
-              type={"date"}
-              label="Terakhir Di-service"
-              id="last_service"
-              name="last_service"
-              onChange={handleChange}
-              required
-            />
-            <Input
-              type={"text"}
-              label="Lokasi"
-              id="location"
-              name="location"
-              placeholder="Tambang XX"
-              onChange={handleChange}
-              required
+              value={form.stock}
             />
             <SubmitButton label={"Tambahkan Barang"} />
           </form>

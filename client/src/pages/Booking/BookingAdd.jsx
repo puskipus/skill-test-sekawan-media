@@ -7,18 +7,17 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import SubmitButton from "../../components/Button/SubmitButton";
 import Input from "../../components/Input/Input";
-import TextArea from "../../components/Input/TextArea";
-import { useParams } from "react-router-dom";
+import SelectInput from "../../components/Input/SelectInput";
 
-export default function InventarisUpdate() {
+export default function BookingAdd() {
   const navigate = useNavigate();
-  const { id } = useParams();
 
   const [form, setForm] = useState({
-    namaBarang: "",
-    deskripsi: "",
-    harga: "",
-    stock: "",
+    supervisor_id: "",
+    driver_id: "",
+    vehicle_id: "",
+    pickup_date: "",
+    destination: "",
   });
 
   const handleChange = (e) => {
@@ -29,14 +28,14 @@ export default function InventarisUpdate() {
     e.preventDefault();
 
     const result = await Swal.fire({
-      title: "Anda yakin mengupdate barang ini?",
+      title: "Anda yakin booking vehicle ini?",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Yes",
       cancelButtonText: "No",
     });
     if (result.isConfirmed) {
-      const res = await postData(`/inventaris/update/${id}`, form);
+      const res = await postData(`/book`, form);
 
       if (res?.data?.message) {
         toast.success(res?.data?.message, {
@@ -49,7 +48,7 @@ export default function InventarisUpdate() {
           progress: undefined,
         });
 
-        navigate("/inventaris");
+        navigate("/booking");
       } else {
         toast.error(res?.response?.data?.error, {
           position: "top-right",
@@ -64,24 +63,52 @@ export default function InventarisUpdate() {
     }
   };
 
-  const fetchInventaris = async () => {
+  const [supervisor, setSupervisor] = useState([]);
+  const fetchSupervisor = async () => {
     try {
-      const res = await getData(`/inventaris/${id}`);
-      const {
-        namaBarang = "",
-        deskripsi = "",
-        harga = "",
-        stock = "",
-      } = res.data[0];
+      const res = await getData("/users/supervisors");
+      const data = res.data.map((element) => ({
+        id: element.id,
+        name: element.name,
+      }));
+      setSupervisor(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-      setForm({ namaBarang, deskripsi, harga, stock });
+  const [driver, setdriver] = useState([]);
+  const fetchdriver = async () => {
+    try {
+      const res = await getData("/users/drivers");
+      const data = res.data.map((element) => ({
+        id: element.id,
+        name: element.name,
+      }));
+      setdriver(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [vehicle, setvehicle] = useState([]);
+  const fetchvehicle = async () => {
+    try {
+      const res = await getData("/vehicle");
+      const data = res.data.map((element) => ({
+        id: element.id,
+        name: element.name,
+      }));
+      setvehicle(data);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    fetchInventaris();
+    fetchSupervisor();
+    fetchdriver();
+    fetchvehicle();
   }, []);
 
   console.log(form);
@@ -93,47 +120,46 @@ export default function InventarisUpdate() {
 
       <div className="p-4 sm:ml-64">
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
-          <h1 className="text-3xl">Update Barang</h1>
+          <h1 className="text-3xl">Booking Vehicles</h1>
 
           <form className="max-w-sm mt-16" onSubmit={handleSubmit}>
-            <Input
-              type={"text"}
-              label="Nama Barang"
-              id="namaBarang"
-              name="namaBarang"
-              placeholder="Drone XX"
+            <SelectInput
+              id="supervisor_id"
+              name={"supervisor_id"}
+              label="Supervisor"
+              options={supervisor}
               onChange={handleChange}
-              required
-              value={form.namaBarang}
             />
-            <TextArea
-              type={"text"}
-              label="Deskripsi"
-              id="deskripsi"
-              name="deskripsi"
+            <SelectInput
+              id="driver_id"
+              name={"driver_id"}
+              label="Driver"
+              options={driver}
               onChange={handleChange}
-              required
-              value={form.deskripsi}
             />
-            <Input
-              type={"number"}
-              label="Harga"
-              id="harga"
-              name="harga"
-              placeholder="50000"
+            <SelectInput
+              id="vehicle_id"
+              name={"vehicle_id"}
+              label="Vehicle"
+              options={vehicle}
               onChange={handleChange}
-              required
-              value={form.harga}
             />
             <Input
-              type={"text"}
-              label="Stock Awal"
-              id="stock"
-              name="stock"
-              placeholder="10"
+              type={"date"}
+              label="Pickup Date"
+              id="pickup_date"
+              name="pickup_date"
               onChange={handleChange}
               required
-              value={form.stock}
+            />
+            <Input
+              type={"text"}
+              label="Destination"
+              id="destination"
+              name="destination"
+              placeholder="Tambang XX"
+              onChange={handleChange}
+              required
             />
             <SubmitButton label={"Tambahkan Barang"} />
           </form>

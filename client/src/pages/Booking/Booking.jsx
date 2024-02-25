@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/SideBar";
 import AddButton from "../../components/Button/AddButton";
-import { getData } from "../../utils/fetch";
+import { getData, putData } from "../../utils/fetch";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 export default function Booking() {
   const [book, setbook] = useState([]);
@@ -17,12 +19,47 @@ export default function Booking() {
     }
   };
 
+  const handleApproved = async (id) => {
+    const result = await Swal.fire({
+      title: "Anda yakin menyetujui booking ini?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    });
+    if (result.isConfirmed) {
+      const res = await putData(`/book/${id}/approve`);
+
+      if (res?.data?.message) {
+        toast.success(res?.data?.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+
+        fetchbook();
+      } else {
+        toast.error(res?.response?.data?.error, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    }
+  };
+
   useEffect(() => {
     setRole(JSON.parse(localStorage.getItem("role")));
     fetchbook();
   }, []);
-
-  console.log(book);
 
   return (
     <>
@@ -34,7 +71,7 @@ export default function Booking() {
           <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
             <div className="flex justify-between items-center">
               <h1 className="text-3xl">Manajemen book</h1>
-              {role === "Admin" ? <AddButton to="/book/add" /> : null}
+              {role === "Admin" ? <AddButton to="/booking/add" /> : null}
             </div>
 
             {/* table */}
@@ -66,6 +103,11 @@ export default function Booking() {
                       <th scope="col" class="px-6 py-3">
                         Status
                       </th>
+                      {role === "Supervisor" || role === "Driver" ? (
+                        <th scope="col" class="px-6 py-3">
+                          Action
+                        </th>
+                      ) : null}
                     </tr>
                   </thead>
                   <tbody>
@@ -86,6 +128,18 @@ export default function Booking() {
                         <td className="px-6 py-4">{data.pickup_date}</td>
                         <td className="px-6 py-4">{data.destination}</td>
                         <td className="px-6 py-4">{data.status}</td>
+                        {(role === "Supervisor" && data.status === "Pending") ||
+                        (role === "Driver" &&
+                          data.status === "Approved Supervisor") ? (
+                          <td className="px-6 py-4 text-left flex gap-5">
+                            <div
+                              className="cursor-pointer font-medium text-green-600 dark:text-green-500 hover:underline"
+                              onClick={() => handleApproved(data.id)}
+                            >
+                              Approved
+                            </div>
+                          </td>
+                        ) : null}
                       </tr>
                     ))}
                   </tbody>

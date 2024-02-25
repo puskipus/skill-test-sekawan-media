@@ -3,9 +3,6 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/SideBar";
 import AddButton from "../../components/Button/AddButton";
 import { deleteData, getData } from "../../utils/fetch";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import Swal from "sweetalert2";
 
 export default function Vehicles() {
   const [vehicles, setvehicles] = useState([]);
@@ -62,6 +59,8 @@ export default function Vehicles() {
     fetchvehicles();
   }, []);
 
+  console.log(vehicles);
+
   return (
     <>
       <div>
@@ -76,8 +75,8 @@ export default function Vehicles() {
             </div>
 
             {/* table */}
-            {vehicles.length === 0 ? (
-              <h1>TIdak ada data</h1>
+            {vehicles === undefined ? (
+              <h1 className="mt-10">TIdak ada data</h1>
             ) : (
               <div class="mt-14 relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
